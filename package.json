@@ -9,11 +9,13 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "UglyDonkey",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^29.1.1",
+    "ts-jest": "^29.0.3",
     "typescript": "^4.8.4"
   }
 }
