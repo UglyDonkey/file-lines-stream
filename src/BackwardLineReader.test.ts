@@ -28,4 +28,20 @@ describe('BackwardLineReader', () => {
 
     await expectLineReader(reader).toReturn(lines.reverse());
   });
+
+  it('reads empty lines', async () => {
+    const { lines, file } = await prepareFile({ lineLength: 0, lineCount: 1500 });
+
+    const reader = new BackwardLineReader(file);
+
+    await expectLineReader(reader).toReturn(lines);
+  });
+
+  it('reads empty file', async () => {
+    const { file } = await prepareFile({ lineLength: 0, lineCount: 0 });
+
+    const reader = new BackwardLineReader(file);
+
+    await expectLineReader(reader).toReturn(['']);
+  });
 });

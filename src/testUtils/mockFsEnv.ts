@@ -13,7 +13,7 @@ export async function prepareFile(options: { lineLength: number, lineCount: numb
   const {lineLength, lineCount} = options;
   const lines = Array.from({length: lineCount}, () =>
     Array.from({length: lineLength}, () => Math.floor(Math.random() * 34).toString(34)).join('')
-  ).map((line, index) => `${index}_${line}`);
+  );
 
   await mkdir(dirName, { recursive: true });
   await writeFile(filePath, lines.join('\n'));

@@ -2,19 +2,19 @@ import { LineReader } from './LineReader';
 import { FileHandle } from 'node:fs/promises';
 
 export class BackwardLineReader implements LineReader {
-  constructor(private file: FileHandle) {}
+  constructor(private file?: FileHandle) {}
 
   private buffer: string[] = [];
   private position?: number;
 
   async nextLine(): Promise<string> {
     if(this.position === undefined) {
-      const fileStat = await this.file.stat();
-      this.position = fileStat.size;
+      const fileStat = await this.file?.stat();
+      this.position = fileStat?.size ?? 0;
     }
 
     let line: string = this.buffer.pop() || '';
-    while(!this.buffer.length) {
+    while(!this.buffer.length && this.file) {
       this.position -= 1024;
       let length = 1024;
       if(this.position < 0) {
@@ -27,9 +27,15 @@ export class BackwardLineReader implements LineReader {
       line = this.buffer.pop() + line;
 
       if(this.position <= 0) {
+        await this.file.close();
+        this.file = undefined;
         break;
       }
     }
     return line;
+  }
+
+  hasNextLine(): boolean {
+    return !!(this.buffer.length || this.position === undefined || this.position > 0);
   }
 }

@@ -28,4 +28,20 @@ describe('ForwardLineReader', () => {
 
     await expectLineReader(reader).toReturn(lines);
   });
+
+  it('reads empty lines', async () => {
+    const { lines, file } = await prepareFile({ lineLength: 0, lineCount: 1500 });
+
+    const reader = new ForwardLineReader(file);
+
+    await expectLineReader(reader).toReturn(lines);
+  });
+
+  it('reads empty file', async () => {
+    const { file } = await prepareFile({ lineLength: 0, lineCount: 0 });
+
+    const reader = new ForwardLineReader(file);
+
+    await expectLineReader(reader).toReturn(['']);
+  });
 });
