@@ -1,5 +1,5 @@
 import { LineReader } from './LineReader';
-import { FileHandle } from 'node:fs/promises'
+import { FileHandle } from 'node:fs/promises';
 
 export class ForwardLineReader implements LineReader {
   constructor(private file?: FileHandle) {}
@@ -14,8 +14,7 @@ export class ForwardLineReader implements LineReader {
       line += this.buffer.shift();
 
       if(bytesRead < 1024) {
-        await this.file.close();
-        this.file = undefined;
+        this.close();
         break;
       }
     }
@@ -24,5 +23,12 @@ export class ForwardLineReader implements LineReader {
 
   hasNextLine(): boolean {
     return !!(this.file || this.buffer.length);
+  }
+
+  async close() {
+    const closePromise = this.file?.close();
+    this.file = undefined;
+
+    await closePromise;
   }
 }

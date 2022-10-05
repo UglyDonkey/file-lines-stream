@@ -27,8 +27,7 @@ export class BackwardLineReader implements LineReader {
       line = this.buffer.pop() + line;
 
       if(this.position <= 0) {
-        await this.file.close();
-        this.file = undefined;
+        this.close();
         break;
       }
     }
@@ -37,5 +36,12 @@ export class BackwardLineReader implements LineReader {
 
   hasNextLine(): boolean {
     return !!(this.buffer.length || this.position === undefined || this.position > 0);
+  }
+
+  async close() {
+    const closePromise = this.file?.close();
+    this.file = undefined;
+
+    await closePromise;
   }
 }
