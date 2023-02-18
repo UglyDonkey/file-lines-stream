@@ -10,8 +10,6 @@ on:
 
 jobs:
   npm-publish:
-    env:
-      NPM_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +22,7 @@ jobs:
       - run: |
           git config --global user.email "<>"
           git config --global user.name "GitHub Actions"
-      - run: npm login
+      - run: npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}
       - run: npm ci
       - run: npm run build
       - run: npm version "${{ inputs.version }}"
