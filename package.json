@@ -1,7 +1,13 @@
 {
   "name": "file-lines-stream",
   "version": "0.0.1",
-  "description": "",
+  "description": "This package allows to read files line by line in both directions. It supports node stream and WebStream API",
+  "keywords": [
+    "file",
+    "line",
+    "stream",
+    "webstream"
+  ],
   "homepage": "https://github.com/UglyDonkey/file-lines-stream",
   "repository": "UglyDonkey/file-lines-stream",
   "main": "dist/index.js",
