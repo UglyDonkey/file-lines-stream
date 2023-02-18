@@ -1,0 +1,43 @@
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version (1.2.3)
+        required: true
+        type: string
+
+jobs:
+  npm-publish:
+    env:
+      NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: |
+          git config --global user.email "<>"
+          git config --global user.name "GitHub Actions"
+      - run: npm ci
+      - run: npm run build
+      - run: npm version "${{ inputs.version }}"
+      - run: git push --all --follow-tags
+
+  create-gh-release:
+    runs-on: ubuntu-latest
+
+    needs:
+      - npm-publish
+      - docker-publish
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: gh release create "v${{ inputs.version }}" --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
