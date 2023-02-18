@@ -27,6 +27,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm version "${{ inputs.version }}"
+      - run: npm publish
       - run: git push --all --follow-tags
 
   create-gh-release:
