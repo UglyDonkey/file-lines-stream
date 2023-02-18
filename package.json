@@ -1,6 +1,6 @@
 {
   "name": "file-lines-stream",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "This package allows to read files line by line in both directions. It supports node stream and WebStream API",
   "keywords": [
     "file",
