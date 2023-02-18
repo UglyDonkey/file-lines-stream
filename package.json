@@ -2,6 +2,8 @@
   "name": "file-lines-stream",
   "version": "0.0.1",
   "description": "",
+  "homepage": "https://github.com/UglyDonkey/file-lines-stream",
+  "repository": "UglyDonkey/file-lines-stream",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
