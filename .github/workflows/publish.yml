@@ -34,7 +34,6 @@ jobs:
 
     needs:
       - npm-publish
-      - docker-publish
 
     steps:
       - uses: actions/checkout@v3
