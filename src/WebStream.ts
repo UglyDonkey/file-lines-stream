@@ -1,16 +1,15 @@
-import {FileHandle, open} from "node:fs/promises";
-import {LineReader} from "./LineReader";
-import {ForwardLineReader} from "./ForwardLineReader";
-import {BackwardLineReader} from "./BackwardLineReader";
+import { FileHandle } from "node:fs/promises";
+import { LineReader } from "./LineReader";
+import { ForwardLineReader } from "./ForwardLineReader";
+import { BackwardLineReader } from "./BackwardLineReader";
+import { constructLineReader } from "./constructLineReader";
 
 export async function createReadableStream(
   file: string | FileHandle,
   LineReaderConstructable: { new(fileHandle: FileHandle): LineReader },
   strategy?: QueuingStrategy<string>
 ): Promise<ReadableStream<string>> {
-  const fileHandle = typeof file === 'string' ? await open(file) : file;
-
-  const reader = new LineReaderConstructable(fileHandle);
+  const reader = await constructLineReader(file, LineReaderConstructable);
 
   return new ReadableStream<string>({
     pull: async controller => {

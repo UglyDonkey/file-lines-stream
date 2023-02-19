@@ -1,16 +1,15 @@
 import { Readable } from 'node:stream';
 import { ForwardLineReader } from './ForwardLineReader';
-import { FileHandle, open } from 'node:fs/promises';
+import { FileHandle } from 'node:fs/promises';
 import { LineReader } from './LineReader';
 import { BackwardLineReader } from './BackwardLineReader';
+import { constructLineReader } from "./constructLineReader";
 
 export async function createReadStream(
   file: string | FileHandle,
   LineReaderConstructable: { new(fileHandle: FileHandle): LineReader }
 ): Promise<Readable> {
-  const fileHandle = typeof file === 'string' ? await open(file) : file;
-
-  const reader = new LineReaderConstructable(fileHandle);
+  const reader = await constructLineReader(file, LineReaderConstructable);
 
   return new Readable({
     objectMode: true,
