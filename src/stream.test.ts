@@ -115,7 +115,7 @@ describe('createForwardStream', () => {
 
     await new Promise(resolve => pipeline(readable, new Writable({
       objectMode: true,
-      write (line, _, cb) {
+      write ({}, {}, cb) {
         this.destroy();
         cb();
       }
