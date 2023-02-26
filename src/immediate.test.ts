@@ -20,6 +20,21 @@ describe('immediateReader', () => {
     return { nextLine, LineReaderStub };
   }
 
+  function arrayToLineReader(lines: string[]) {
+    let i = 0;
+    const nextLine = jest.fn<Promise<string>, []>().mockImplementation(async () => {
+      return lines[i++];
+    });
+
+    const LineReaderStub = class implements LineReader {
+      close = () => Promise.resolve();
+      hasNextLine = () => i < lines.length;
+      nextLine = nextLine
+    };
+    return { nextLine, LineReaderStub };
+
+  }
+
   it('reads exact amount of lines', async () => {
     const { nextLine, LineReaderStub } = createLineReaderStub(10);
 
@@ -48,6 +63,24 @@ describe('immediateReader', () => {
     expect(lines).toHaveLength(5);
     expect(lines.every(line => line === 'line')).toBe(true);
     expect(nextLine).toHaveBeenCalledTimes(5);
+  });
+
+  it('doesn\'t ignore empty lines if ignoreEmptyLines disabled', async () => {
+    const lines = ['line1', '', 'line2'];
+    const { LineReaderStub } = arrayToLineReader(lines);
+
+    const result = await immediateReader(stubFile, LineReaderStub, 5, { ignoreEmptyLines: false });
+
+    expect(result).toStrictEqual(lines);
+  });
+
+  it('ignores empty lines if ignoreEmptyLines enabled', async () => {
+    const lines = ['line1', '', 'line2'];
+    const { LineReaderStub } = arrayToLineReader(lines);
+
+    const result = await immediateReader(stubFile, LineReaderStub, 5, { ignoreEmptyLines: true });
+
+    expect(result).toStrictEqual(['line1', 'line2']);
   });
 });
 
